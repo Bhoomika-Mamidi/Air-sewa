@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  Dashboard:
+    image: prashrex/dashboard
+    container_name: dashboard-react
+    restart: always
+    build: 
+      context: ./dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - llm-webapp-network
+    
+  CodeGen:
+    image: prashrex/codegen
+    container_name: codegen
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    tty: true
+    stdin_open: true
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - llm-webapp-network
+
+  watchtower:
+    image: containrrr/watchtower
+    command: --interval 15 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+    networks:
+      - llm-webapp-network
+
+  redis:
+    image: redis:3.0
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - llm-webapp-network
+
+networks:
+  llm-webapp-network:
+    driver: bridge

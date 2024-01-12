@@ -1,0 +1,7 @@
+pip install -q -U bitsandbytes
+pip install -q -U git+https://github.com/huggingface/transformers.git
+pip install -q -U git+https://github.com/huggingface/peft.git
+pip install -q -U git+https://github.com/huggingface/accelerate.git
+pip install -q datasets==2.12.0
+pip install loralib==0.1.1
+pip install einops==0.6.1
